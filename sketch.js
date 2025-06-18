@@ -6,18 +6,19 @@ let score = 0;
 let startTime;
 let finger;
 
-let canvasW = 240; // tight fit around the game
-let canvasH = 360;
+let canvasW = 240;
+let canvasH = 480;
 
 function preload() {
   playerImage = loadImage("finger.png");
   doorImage = loadImage("door.png");
   soundFormats('mp3');
-  fartSound = loadSound("fart.mp3");
+  fartSound = loadSound("fart.mp3", () => {}, () => {});
 }
 
 function setup() {
-  createCanvas(canvasW, canvasH);
+  let cnv = createCanvas(canvasW, canvasH);
+  cnv.parent(document.body);
   finger = new Finger();
   textAlign(CENTER, CENTER);
   textSize(20);
@@ -35,8 +36,7 @@ function draw() {
 
   else if (gameState === "play") {
     imageMode(CENTER);
-    image(doorImage, width / 2, height - 150, 200, 300); // door stays at bottom
-
+    image(doorImage, width / 2, height - 150, 200, 300);
     finger.update();
     finger.show();
 
@@ -45,7 +45,7 @@ function draw() {
       finger.x > width / 2 - 100 &&
       finger.x < width / 2 + 100
     ) {
-      fartSound.play();
+      if (fartSound.isLoaded()) fartSound.play();
       gameState = "end";
     }
 
@@ -57,11 +57,11 @@ function draw() {
 
   else if (gameState === "end") {
     fill(0);
-    textSize(24);
-    text("YOU TOUCHED THE DOOR", width / 2, height / 2 - 10);
+    textSize(20);
+    text("YOU TOUCHED THE DOOR", width / 2, height / 2 - 20);
     textSize(16);
-    text("Final Score: " + score, width / 2, height / 2 + 20);
-    text("Tap to restart", width / 2, height / 2 + 50);
+    text("Final Score: " + score, width / 2, height / 2 + 10);
+    text("Tap to restart", width / 2, height / 2 + 40);
   }
 }
 
