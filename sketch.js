@@ -34,14 +34,13 @@ function draw() {
   }
 
   else if (gameState === "play") {
-    let doorW = width * 0.35;
+    let doorW = width * 0.4;
     let doorH = doorW * 1.5;
     imageMode(CENTER);
     image(doorImage, width / 2, height - doorH / 2, doorW, doorH);
     finger.update();
     finger.show();
 
-    // Collision
     if (
       finger.y + finger.h / 2 > height - doorH &&
       finger.x > width / 2 - doorW / 2 &&
@@ -83,7 +82,7 @@ function touchStarted() {
 
 class Finger {
   constructor() {
-    this.w = width * 0.45;
+    this.w = width * 0.5;
     this.h = this.w * 1.5;
     this.reset();
   }
