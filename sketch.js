@@ -1,36 +1,30 @@
 let gameState = "start";
-let playerImage, doorImage, fartSound;
+let playerImage, doorImage;
 let gravity = 0.25;
 let jumpForce = -7;
 let score = 0;
 let startTime;
 let finger;
-let canvasReady = false;
 let assetsLoaded = false;
 
 function preload() {
   playerImage = loadImage("finger.png", () => {}, () => {});
-  doorImage = loadImage("door.png", () => {}, () => {});
-  soundFormats('mp3');
-  fartSound = loadSound("fart.mp3", () => { assetsLoaded = true; }, () => {});
+  doorImage = loadImage("door.png", () => { assetsLoaded = true; }, () => {});
 }
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
   textAlign(CENTER, CENTER);
   finger = new Finger();
-  canvasReady = true;
 }
 
 function draw() {
-  if (!canvasReady) return;
-
-  background(200); // gray background to confirm canvas is running
+  background(200);
 
   if (!assetsLoaded) {
     fill(255, 0, 0);
     textSize(18);
-    text("Loading failed or delayed", width / 2, height / 2);
+    text("Image loading failed or delayed", width / 2, height / 2);
     return;
   }
 
@@ -55,7 +49,6 @@ function draw() {
       finger.x > width / 2 - doorW / 2 &&
       finger.x < width / 2 + doorW / 2
     ) {
-      if (fartSound.isLoaded()) fartSound.play();
       gameState = "end";
     }
 
@@ -76,8 +69,6 @@ function draw() {
 }
 
 function touchStarted() {
-  if (!canvasReady) return false;
-
   if (gameState === "start") {
     gameState = "play";
     startTime = millis();
