@@ -84,14 +84,14 @@ function touchStarted() {
 
 class Finger {
   constructor() {
-    this.w = 75;
-    this.h = 120;
+    this.w = 375;
+    this.h = 600;
     this.reset();
   }
 
   reset() {
     this.x = width / 2;
-    this.y = height / 2 - 100;
+    this.y = height / 2 - 300;
     this.vy = 0;
   }
 
