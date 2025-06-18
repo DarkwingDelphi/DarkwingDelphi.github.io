@@ -6,30 +6,33 @@ let score = 0;
 let startTime;
 let finger;
 let canvasReady = false;
+let assetsLoaded = false;
 
 function preload() {
-  playerImage = loadImage("finger.png");
-  doorImage = loadImage("door.png");
+  playerImage = loadImage("finger.png", () => {}, () => {});
+  doorImage = loadImage("door.png", () => {}, () => {});
   soundFormats('mp3');
-  fartSound = loadSound("fart.mp3", () => {}, () => {});
+  fartSound = loadSound("fart.mp3", () => { assetsLoaded = true; }, () => {});
 }
 
 function setup() {
-  noCanvas();
+  createCanvas(window.innerWidth, window.innerHeight);
   textAlign(CENTER, CENTER);
-}
-
-function initCanvas() {
-  createCanvas(displayWidth, displayHeight);
   finger = new Finger();
-  resizeCanvas(displayWidth, displayHeight);
   canvasReady = true;
 }
 
 function draw() {
   if (!canvasReady) return;
 
-  background(240);
+  background(200); // gray background to confirm canvas is running
+
+  if (!assetsLoaded) {
+    fill(255, 0, 0);
+    textSize(18);
+    text("Loading failed or delayed", width / 2, height / 2);
+    return;
+  }
 
   if (gameState === "start") {
     fill(0);
@@ -73,10 +76,7 @@ function draw() {
 }
 
 function touchStarted() {
-  if (!canvasReady) {
-    initCanvas();
-    return false;
-  }
+  if (!canvasReady) return false;
 
   if (gameState === "start") {
     gameState = "play";
@@ -93,14 +93,14 @@ function touchStarted() {
 
 class Finger {
   constructor() {
-    this.w = displayWidth * 0.5;
+    this.w = width * 0.5;
     this.h = this.w * 1.5;
     this.reset();
   }
 
   reset() {
-    this.x = displayWidth / 2;
-    this.y = displayHeight / 2 - 100;
+    this.x = width / 2;
+    this.y = height / 2 - 100;
     this.vy = 0;
   }
 
@@ -111,8 +111,8 @@ class Finger {
   update() {
     this.vy += gravity;
     this.y += this.vy;
-    if (this.y > displayHeight - this.h / 2) {
-      this.y = displayHeight - this.h / 2;
+    if (this.y > height - this.h / 2) {
+      this.y = height - this.h / 2;
       this.vy = 0;
     }
   }
