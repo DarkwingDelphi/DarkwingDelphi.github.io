@@ -19,12 +19,12 @@ function setup() {
 }
 
 function draw() {
-  background(200);
+  background(220);
 
   if (!assetsLoaded) {
     fill(255, 0, 0);
     textSize(18);
-    text("Image loading failed or delayed", width / 2, height / 2);
+    text("Loading failed or delayed", width / 2, height / 2);
     return;
   }
 
@@ -84,7 +84,7 @@ function touchStarted() {
 
 class Finger {
   constructor() {
-    this.w = width * 0.5;
+    this.w = width * 0.25;
     this.h = this.w * 1.5;
     this.reset();
   }
@@ -96,7 +96,7 @@ class Finger {
   }
 
   jump() {
-    this.vy = jumpForce;
+    this.vy = -7;
   }
 
   update() {
