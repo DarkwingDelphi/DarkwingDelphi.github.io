@@ -1,15 +1,22 @@
-let gameState = "start"; // start, play, end
-let ball;
+let gameState = "start";
+let playerImage, doorImage, fartSound;
 let gravity = 0.2;
 let jumpForce = -5;
-let doorHeight;
-let doorWidth = 100;
+let doorHeight, doorWidth = 120;
 let score = 0;
 let startTime;
+let finger;
+
+function preload() {
+  playerImage = loadImage("finger.png");
+  doorImage = loadImage("door.png");
+  soundFormats('mp3');
+  fartSound = loadSound("fart.mp3");
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  ball = new Ball();
+  finger = new Finger();
   doorHeight = height / 3;
   textAlign(CENTER, CENTER);
   textSize(32);
@@ -29,14 +36,15 @@ function draw() {
   else if (gameState === "play") {
     drawDoor();
 
-    ball.update();
-    ball.show();
+    finger.update();
+    finger.show();
 
     if (
-      ball.y + ball.r > height - doorHeight &&
-      ball.x > width / 2 - doorWidth / 2 &&
-      ball.x < width / 2 + doorWidth / 2
+      finger.y + finger.h / 2 > height - doorHeight &&
+      finger.x > width / 2 - doorWidth / 2 &&
+      finger.x < width / 2 + doorWidth / 2
     ) {
+      fartSound.play();
       gameState = "end";
     }
 
@@ -58,22 +66,17 @@ function draw() {
 }
 
 function drawDoor() {
-  fill(139, 69, 19);
-  rect(width / 2 - doorWidth / 2, height - doorHeight, doorWidth, doorHeight, 5);
-  fill(255, 215, 0);
-  ellipse(width / 2 + doorWidth / 2 - 15, height - doorHeight + doorHeight / 2, 10);
-  fill(255);
-  textSize(24);
-  text("CAKE", width / 2, height - doorHeight / 2);
+  imageMode(CENTER);
+  image(doorImage, width / 2, height - doorHeight / 2, doorWidth, doorHeight);
 }
 
 function touchStarted() {
   if (gameState === "start") {
     gameState = "play";
     startTime = millis();
-    ball.reset();
+    finger.reset();
   } else if (gameState === "play") {
-    ball.jump();
+    finger.jump();
   } else if (gameState === "end") {
     gameState = "start";
     score = 0;
@@ -81,9 +84,10 @@ function touchStarted() {
   return false;
 }
 
-class Ball {
+class Finger {
   constructor() {
-    this.r = 20;
+    this.w = 60;
+    this.h = 60;
     this.reset();
   }
 
@@ -101,15 +105,15 @@ class Ball {
     this.vy += gravity;
     this.y += this.vy;
 
-    if (this.y > height - this.r) {
-      this.y = height - this.r;
+    if (this.y > height - this.h / 2) {
+      this.y = height - this.h / 2;
       this.vy = 0;
     }
   }
 
   show() {
-    fill(0, 100, 255);
-    ellipse(this.x, this.y, this.r * 2);
+    imageMode(CENTER);
+    image(playerImage, this.x, this.y, this.w, this.h);
   }
 }
 
