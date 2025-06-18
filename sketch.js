@@ -5,7 +5,6 @@ let jumpForce = -7;
 let score = 0;
 let startTime;
 let finger;
-let canvasW, canvasH;
 
 function preload() {
   playerImage = loadImage("finger.png");
@@ -15,11 +14,10 @@ function preload() {
 }
 
 function setup() {
-  canvasW = windowWidth;
-  canvasH = windowHeight;
-  createCanvas(canvasW, canvasH);
+  createCanvas(window.innerWidth, window.innerHeight);
   finger = new Finger();
   textAlign(CENTER, CENTER);
+  setTimeout(() => resizeCanvas(window.innerWidth, window.innerHeight), 200); // delay resize for iOS
 }
 
 function draw() {
@@ -113,5 +111,5 @@ class Finger {
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
+  resizeCanvas(window.innerWidth, window.innerHeight);
 }
