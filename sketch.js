@@ -2,10 +2,12 @@ let gameState = "start";
 let playerImage, doorImage, fartSound;
 let gravity = 0.2;
 let jumpForce = -5;
-let doorHeight, doorWidth = 120;
 let score = 0;
 let startTime;
 let finger;
+
+let canvasW = 240; // tight fit around the game
+let canvasH = 360;
 
 function preload() {
   playerImage = loadImage("finger.png");
@@ -15,11 +17,10 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(canvasW, canvasH);
   finger = new Finger();
-  doorHeight = height / 3;
   textAlign(CENTER, CENTER);
-  textSize(32);
+  textSize(20);
 }
 
 function draw() {
@@ -27,22 +28,22 @@ function draw() {
 
   if (gameState === "start") {
     fill(0);
-    textSize(36);
-    text("DON’T TOUCH THE DOOR", width / 2, height / 2);
-    textSize(20);
-    text("Tap to start", width / 2, height / 2 + 50);
+    text("DON’T TOUCH THE DOOR", width / 2, height / 2 - 20);
+    textSize(14);
+    text("Tap to start", width / 2, height / 2 + 10);
   }
 
   else if (gameState === "play") {
-    drawDoor();
+    imageMode(CENTER);
+    image(doorImage, width / 2, height - 150, 200, 300); // door stays at bottom
 
     finger.update();
     finger.show();
 
     if (
-      finger.y + finger.h / 2 > height - doorHeight &&
-      finger.x > width / 2 - doorWidth / 2 &&
-      finger.x < width / 2 + doorWidth / 2
+      finger.y + finger.h / 2 > height - 150 &&
+      finger.x > width / 2 - 100 &&
+      finger.x < width / 2 + 100
     ) {
       fartSound.play();
       gameState = "end";
@@ -50,24 +51,18 @@ function draw() {
 
     score = floor((millis() - startTime) / 100);
     fill(0);
-    textSize(20);
-    text("Score: " + score, width / 2, 40);
+    textSize(14);
+    text("Score: " + score, width / 2, 20);
   }
 
   else if (gameState === "end") {
     fill(0);
-    textSize(36);
-    text("YOU TOUCHED THE DOOR", width / 2, height / 2);
     textSize(24);
-    text("Final Score: " + score, width / 2, height / 2 + 50);
-    textSize(18);
-    text("Tap to restart", width / 2, height / 2 + 100);
+    text("YOU TOUCHED THE DOOR", width / 2, height / 2 - 10);
+    textSize(16);
+    text("Final Score: " + score, width / 2, height / 2 + 20);
+    text("Tap to restart", width / 2, height / 2 + 50);
   }
-}
-
-function drawDoor() {
-  imageMode(CENTER);
-  image(doorImage, width / 2, height - doorHeight / 2, doorWidth, doorHeight);
 }
 
 function touchStarted() {
@@ -86,14 +81,14 @@ function touchStarted() {
 
 class Finger {
   constructor() {
-    this.w = 60;
-    this.h = 60;
+    this.w = 240;
+    this.h = 360;
     this.reset();
   }
 
   reset() {
     this.x = width / 2;
-    this.y = height / 2 - doorHeight;
+    this.y = height / 2 - 100;
     this.vy = 0;
   }
 
@@ -115,9 +110,4 @@ class Finger {
     imageMode(CENTER);
     image(playerImage, this.x, this.y, this.w, this.h);
   }
-}
-
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  doorHeight = height / 3;
 }
