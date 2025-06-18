@@ -5,7 +5,7 @@ let jumpForce = -7;
 let score = 0;
 let startTime;
 let finger;
-let canvasInitialized = false;
+let canvasReady = false;
 
 function preload() {
   playerImage = loadImage("finger.png");
@@ -15,18 +15,19 @@ function preload() {
 }
 
 function setup() {
-  noCanvas(); // don't create the canvas yet
+  noCanvas();
   textAlign(CENTER, CENTER);
 }
 
 function initCanvas() {
-  createCanvas(window.innerWidth, window.innerHeight);
+  createCanvas(displayWidth, displayHeight);
   finger = new Finger();
-  canvasInitialized = true;
+  resizeCanvas(displayWidth, displayHeight);
+  canvasReady = true;
 }
 
 function draw() {
-  if (!canvasInitialized) return;
+  if (!canvasReady) return;
 
   background(240);
 
@@ -72,7 +73,7 @@ function draw() {
 }
 
 function touchStarted() {
-  if (!canvasInitialized) {
+  if (!canvasReady) {
     initCanvas();
     return false;
   }
@@ -92,14 +93,14 @@ function touchStarted() {
 
 class Finger {
   constructor() {
-    this.w = window.innerWidth * 0.5;
+    this.w = displayWidth * 0.5;
     this.h = this.w * 1.5;
     this.reset();
   }
 
   reset() {
-    this.x = window.innerWidth / 2;
-    this.y = window.innerHeight / 2 - 100;
+    this.x = displayWidth / 2;
+    this.y = displayHeight / 2 - 100;
     this.vy = 0;
   }
 
@@ -110,8 +111,8 @@ class Finger {
   update() {
     this.vy += gravity;
     this.y += this.vy;
-    if (this.y > window.innerHeight - this.h / 2) {
-      this.y = window.innerHeight - this.h / 2;
+    if (this.y > displayHeight - this.h / 2) {
+      this.y = displayHeight - this.h / 2;
       this.vy = 0;
     }
   }
