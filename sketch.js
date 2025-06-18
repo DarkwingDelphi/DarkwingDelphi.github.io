@@ -91,7 +91,7 @@ class Finger {
 
   reset() {
     this.x = width / 2;
-    this.y = height / 2 - 300;
+    this.y = height / 2 - this.h / 2;
     this.vy = 0;
   }
 
