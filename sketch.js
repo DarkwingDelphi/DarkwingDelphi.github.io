@@ -5,6 +5,7 @@ let jumpForce = -7;
 let score = 0;
 let startTime;
 let finger;
+let canvasInitialized = false;
 
 function preload() {
   playerImage = loadImage("finger.png");
@@ -14,13 +15,19 @@ function preload() {
 }
 
 function setup() {
+  noCanvas(); // don't create the canvas yet
+  textAlign(CENTER, CENTER);
+}
+
+function initCanvas() {
   createCanvas(window.innerWidth, window.innerHeight);
   finger = new Finger();
-  textAlign(CENTER, CENTER);
-  setTimeout(() => resizeCanvas(window.innerWidth, window.innerHeight), 200); // delay resize for iOS
+  canvasInitialized = true;
 }
 
 function draw() {
+  if (!canvasInitialized) return;
+
   background(240);
 
   if (gameState === "start") {
@@ -65,6 +72,11 @@ function draw() {
 }
 
 function touchStarted() {
+  if (!canvasInitialized) {
+    initCanvas();
+    return false;
+  }
+
   if (gameState === "start") {
     gameState = "play";
     startTime = millis();
@@ -80,14 +92,14 @@ function touchStarted() {
 
 class Finger {
   constructor() {
-    this.w = width * 0.5;
+    this.w = window.innerWidth * 0.5;
     this.h = this.w * 1.5;
     this.reset();
   }
 
   reset() {
-    this.x = width / 2;
-    this.y = height / 2 - 100;
+    this.x = window.innerWidth / 2;
+    this.y = window.innerHeight / 2 - 100;
     this.vy = 0;
   }
 
@@ -98,8 +110,8 @@ class Finger {
   update() {
     this.vy += gravity;
     this.y += this.vy;
-    if (this.y > height - this.h / 2) {
-      this.y = height - this.h / 2;
+    if (this.y > window.innerHeight - this.h / 2) {
+      this.y = window.innerHeight - this.h / 2;
       this.vy = 0;
     }
   }
@@ -108,8 +120,4 @@ class Finger {
     imageMode(CENTER);
     image(playerImage, this.x, this.y, this.w, this.h);
   }
-}
-
-function windowResized() {
-  resizeCanvas(window.innerWidth, window.innerHeight);
 }
