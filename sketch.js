@@ -42,7 +42,7 @@ function draw() {
     imageMode(CENTER);
     image(doorImage, width / 2, height - doorH / 2, doorW, doorH);
     finger.update();
-    finger.show(doorW, doorH);
+    finger.show();
 
     if (
       finger.y + finger.h / 2 > height - doorH &&
@@ -84,8 +84,8 @@ function touchStarted() {
 
 class Finger {
   constructor() {
-    this.w = 1;  // placeholder, set in show()
-    this.h = 1;
+    this.w = 60;
+    this.h = 90;
     this.reset();
   }
 
@@ -108,9 +108,7 @@ class Finger {
     }
   }
 
-  show(doorW, doorH) {
-    this.w = (doorW / 20);
-    this.h = this.w * 1.5;
+  show() {
     imageMode(CENTER);
     image(playerImage, this.x, this.y, this.w, this.h);
   }
